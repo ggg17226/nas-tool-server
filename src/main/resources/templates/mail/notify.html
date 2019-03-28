@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>邮件通知</title>
+</head>
+<body>
+<div>
+    发送时间：<span th:text="${notifyDate}"></span>
+</div>
+<div>
+    事件：<span th:text="${notifyEvent}"></span>
+</div>
+<div>
+    发生时间：<span th:text="${eventDate}"></span>
+</div>
+<div>
+    详情：<span style=" white-space: pre-wrap;" th:text="${notifyDetails}"></span>
+</div>
+</body>
+</html>
