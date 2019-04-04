@@ -39,7 +39,7 @@ public class NasToolServerApplicationTests {
   @Test
   public void contextLoads() {}
 
-//  @Test
+  @Test
   public void testSendMail() throws MessagingException {
     mailService.sendNotifyEmail(
         "ggg17226@gmail.com",
