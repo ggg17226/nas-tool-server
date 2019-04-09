@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agh0st.nastoolserver.Mapper.UserMapper">
+
+
+    <select id="getUserInfoByUsername" resultMap="com.agh0st.nastoolserver.Mapper.base.UserBaseMapper.UserMap">
+        select
+        <include refid="com.agh0st.nastoolserver.Mapper.base.UserBaseMapper.allResult"></include>
+        from `user` where
+        <if test="username != null and username!=''">
+            `username` = #{username}
+        </if>
+        limit 1
+    </select>
+
+</mapper>

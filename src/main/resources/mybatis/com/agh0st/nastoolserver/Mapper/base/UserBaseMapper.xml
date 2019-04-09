@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agh0st.nastoolserver.Mapper.base.UserBaseMapper">
+
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user`
+        (
+        <trim suffixOverrides=",">
+            <if test="id!=null">
+                `id`,
+            </if>
+            <if test="username!=null">
+                `username`,
+            </if>
+            <if test="passwd!=null">
+                `passwd`,
+            </if>
+            <if test="salt!=null">
+                `salt`,
+            </if>
+            <if test="create_time!=null">
+                `create_time`,
+            </if>
+            <if test="update_time!=null">
+                `update_time`,
+            </if>
+            <if test="uuid!=null">
+                `uuid`,
+            </if>
+        </trim>
+        )
+        VALUES
+        (
+        <trim suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="username!=null">
+                #{username},
+            </if>
+            <if test="passwd!=null">
+                #{passwd},
+            </if>
+            <if test="salt!=null">
+                #{salt},
+            </if>
+            <if test="create_time!=null">
+                #{create_time},
+            </if>
+            <if test="update_time!=null">
+                #{update_time},
+            </if>
+            <if test="uuid!=null">
+                #{uuid},
+            </if>
+        </trim>
+        )
+    </insert>
+
+
+    <update id="updateUser">
+        UPDATE `user`
+        SET
+        <trim suffixOverrides=",">
+            <if test="username != null and username!=''">
+                `username` = #{username},
+            </if>
+            <if test="passwd != null and passwd!=''">
+                `passwd` = #{passwd},
+            </if>
+            <if test="salt != null and salt!=''">
+                `salt` = #{salt},
+            </if>
+            <if test="create_time != null">
+                `create_time` = #{create_time},
+            </if>
+            <if test="update_time != null">
+                `update_time` = #{update_time},
+            </if>
+            <if test="uuid != null and uuid!=''">
+                `uuid` = #{uuid},
+            </if>
+        </trim>
+        WHERE
+        <trim suffixOverrides="and">
+            `id` = #{id} and
+        </trim>
+    </update>
+
+    <update id="update">
+        UPDATE `user`
+        SET
+        <trim suffixOverrides=",">
+            <if test="set.username != null and set.username!=''">
+                `username` = #{set.username},
+            </if>
+            <if test="set.passwd != null and set.passwd!=''">
+                `passwd` = #{set.passwd},
+            </if>
+            <if test="set.salt != null and set.salt!=''">
+                `salt` = #{set.salt},
+            </if>
+            <if test="set.create_time != null">
+                `create_time` = #{set.create_time},
+            </if>
+            <if test="set.update_time != null">
+                `update_time` = #{set.update_time},
+            </if>
+            <if test="set.uuid != null and set.uuid!=''">
+                `uuid` = #{set.uuid},
+            </if>
+        </trim>
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="where.idList != null">
+                `id` in
+                <foreach collection="where.idList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.idSt !=null">
+                `id` >= #{where.idSt} and
+            </if>
+            <if test="where.idEd!=null">
+                `id` &lt;= #{where.idEd} and
+            </if>
+            <if test="where.usernameList != null">
+                `username` in
+                <foreach collection="where.usernameList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.fuzzyUsername!=null and where.fuzzyUsername.size()>0">
+                (
+                <foreach collection="where.fuzzyUsername" separator="or" item="item">
+                    `Username` like concat('%',#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.rightFuzzyUsername!=null and where.rightFuzzyUsername.size()>0">
+                (
+                <foreach collection="where.rightFuzzyUsername" separator="or" item="item">
+                    `Username` like concat(#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.passwdList != null">
+                `passwd` in
+                <foreach collection="where.passwdList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.fuzzyPasswd!=null and where.fuzzyPasswd.size()>0">
+                (
+                <foreach collection="where.fuzzyPasswd" separator="or" item="item">
+                    `Passwd` like concat('%',#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.rightFuzzyPasswd!=null and where.rightFuzzyPasswd.size()>0">
+                (
+                <foreach collection="where.rightFuzzyPasswd" separator="or" item="item">
+                    `Passwd` like concat(#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.saltList != null">
+                `salt` in
+                <foreach collection="where.saltList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.fuzzySalt!=null and where.fuzzySalt.size()>0">
+                (
+                <foreach collection="where.fuzzySalt" separator="or" item="item">
+                    `Salt` like concat('%',#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.rightFuzzySalt!=null and where.rightFuzzySalt.size()>0">
+                (
+                <foreach collection="where.rightFuzzySalt" separator="or" item="item">
+                    `Salt` like concat(#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.create_timeList != null">
+                `create_time` in
+                <foreach collection="where.create_timeList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.create_timeSt !=null">
+                `create_time` >= #{where.create_timeSt} and
+            </if>
+            <if test="where.create_timeEd!=null">
+                `create_time` &lt;= #{where.create_timeEd} and
+            </if>
+            <if test="where.update_timeList != null">
+                `update_time` in
+                <foreach collection="where.update_timeList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.update_timeSt !=null">
+                `update_time` >= #{where.update_timeSt} and
+            </if>
+            <if test="where.update_timeEd!=null">
+                `update_time` &lt;= #{where.update_timeEd} and
+            </if>
+            <if test="where.uuidList != null">
+                `uuid` in
+                <foreach collection="where.uuidList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.fuzzyUuid!=null and where.fuzzyUuid.size()>0">
+                (
+                <foreach collection="where.fuzzyUuid" separator="or" item="item">
+                    `Uuid` like concat('%',#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.rightFuzzyUuid!=null and where.rightFuzzyUuid.size()>0">
+                (
+                <foreach collection="where.rightFuzzyUuid" separator="or" item="item">
+                    `Uuid` like concat(#{item},'%')
+                </foreach>
+                ) and
+            </if>
+        </trim>
+    </update>
+
+
+    <resultMap type="com.agh0st.nastoolserver.object.PO.User" id="UserMap">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="passwd" column="passwd"/>
+        <result property="salt" column="salt"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="uuid" column="uuid"/>
+    </resultMap>
+
+
+    <select id="queryUser" resultMap="UserMap">
+        select
+        <include refid="baseResult"></include>
+        from `user`
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="id != null">
+                `id` = #{id} and
+            </if>
+            <if test="username != null and username!=''">
+                `username` = #{username} and
+            </if>
+            <if test="passwd != null and passwd!=''">
+                `passwd` = #{passwd} and
+            </if>
+            <if test="salt != null and salt!=''">
+                `salt` = #{salt} and
+            </if>
+            <if test="create_time != null">
+                `create_time` = #{create_time} and
+            </if>
+            <if test="update_time != null">
+                `update_time` = #{update_time} and
+            </if>
+            <if test="uuid != null and uuid!=''">
+                `uuid` = #{uuid} and
+            </if>
+            <if test="(_parameter instanceof com.agh0st.nastoolserver.object.PO.User$QueryBuilder) == true">
+                <if test="idList != null">
+                    `id` in
+                    <foreach collection="idList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="idSt !=null">
+                    `id` >= #{idSt} and
+                </if>
+                <if test="idEd!=null">
+                    `id` &lt;= #{idEd} and
+                </if>
+                <if test="usernameList != null">
+                    `username` in
+                    <foreach collection="usernameList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyUsername!=null and fuzzyUsername.size()>0">
+                    (
+                    <foreach collection="fuzzyUsername" separator="or" item="item">
+                        `Username` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyUsername!=null and rightFuzzyUsername.size()>0">
+                    (
+                    <foreach collection="rightFuzzyUsername" separator="or" item="item">
+                        `Username` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="passwdList != null">
+                    `passwd` in
+                    <foreach collection="passwdList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyPasswd!=null and fuzzyPasswd.size()>0">
+                    (
+                    <foreach collection="fuzzyPasswd" separator="or" item="item">
+                        `Passwd` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyPasswd!=null and rightFuzzyPasswd.size()>0">
+                    (
+                    <foreach collection="rightFuzzyPasswd" separator="or" item="item">
+                        `Passwd` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="saltList != null">
+                    `salt` in
+                    <foreach collection="saltList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzySalt!=null and fuzzySalt.size()>0">
+                    (
+                    <foreach collection="fuzzySalt" separator="or" item="item">
+                        `Salt` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzySalt!=null and rightFuzzySalt.size()>0">
+                    (
+                    <foreach collection="rightFuzzySalt" separator="or" item="item">
+                        `Salt` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="create_timeList != null">
+                    `create_time` in
+                    <foreach collection="create_timeList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="create_timeSt !=null">
+                    `create_time` >= #{create_timeSt} and
+                </if>
+                <if test="create_timeEd!=null">
+                    `create_time` &lt;= #{create_timeEd} and
+                </if>
+                <if test="update_timeList != null">
+                    `update_time` in
+                    <foreach collection="update_timeList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="update_timeSt !=null">
+                    `update_time` >= #{update_timeSt} and
+                </if>
+                <if test="update_timeEd!=null">
+                    `update_time` &lt;= #{update_timeEd} and
+                </if>
+                <if test="uuidList != null">
+                    `uuid` in
+                    <foreach collection="uuidList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyUuid!=null and fuzzyUuid.size()>0">
+                    (
+                    <foreach collection="fuzzyUuid" separator="or" item="item">
+                        `Uuid` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyUuid!=null and rightFuzzyUuid.size()>0">
+                    (
+                    <foreach collection="rightFuzzyUuid" separator="or" item="item">
+                        `Uuid` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+            </if>
+        </trim>
+    </select>
+
+    <select id="queryUserLimit1" resultMap="UserMap">
+        select
+        <include refid="baseResult"></include>
+        from `user`
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="id != null">
+                `id` = #{id} and
+            </if>
+            <if test="username != null and username!=''">
+                `username` = #{username} and
+            </if>
+            <if test="passwd != null and passwd!=''">
+                `passwd` = #{passwd} and
+            </if>
+            <if test="salt != null and salt!=''">
+                `salt` = #{salt} and
+            </if>
+            <if test="create_time != null">
+                `create_time` = #{create_time} and
+            </if>
+            <if test="update_time != null">
+                `update_time` = #{update_time} and
+            </if>
+            <if test="uuid != null and uuid!=''">
+                `uuid` = #{uuid} and
+            </if>
+            <if test="(_parameter instanceof com.agh0st.nastoolserver.object.PO.User$QueryBuilder) == true">
+                <if test="idList != null">
+                    `id` in
+                    <foreach collection="idList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="idSt !=null">
+                    `id` >= #{idSt} and
+                </if>
+                <if test="idEd!=null">
+                    `id` &lt;= #{idEd} and
+                </if>
+                <if test="usernameList != null">
+                    `username` in
+                    <foreach collection="usernameList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyUsername!=null and fuzzyUsername.size()>0">
+                    (
+                    <foreach collection="fuzzyUsername" separator="or" item="item">
+                        `Username` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyUsername!=null and rightFuzzyUsername.size()>0">
+                    (
+                    <foreach collection="rightFuzzyUsername" separator="or" item="item">
+                        `Username` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="passwdList != null">
+                    `passwd` in
+                    <foreach collection="passwdList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyPasswd!=null and fuzzyPasswd.size()>0">
+                    (
+                    <foreach collection="fuzzyPasswd" separator="or" item="item">
+                        `Passwd` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyPasswd!=null and rightFuzzyPasswd.size()>0">
+                    (
+                    <foreach collection="rightFuzzyPasswd" separator="or" item="item">
+                        `Passwd` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="saltList != null">
+                    `salt` in
+                    <foreach collection="saltList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzySalt!=null and fuzzySalt.size()>0">
+                    (
+                    <foreach collection="fuzzySalt" separator="or" item="item">
+                        `Salt` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzySalt!=null and rightFuzzySalt.size()>0">
+                    (
+                    <foreach collection="rightFuzzySalt" separator="or" item="item">
+                        `Salt` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="create_timeList != null">
+                    `create_time` in
+                    <foreach collection="create_timeList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="create_timeSt !=null">
+                    `create_time` >= #{create_timeSt} and
+                </if>
+                <if test="create_timeEd!=null">
+                    `create_time` &lt;= #{create_timeEd} and
+                </if>
+                <if test="update_timeList != null">
+                    `update_time` in
+                    <foreach collection="update_timeList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="update_timeSt !=null">
+                    `update_time` >= #{update_timeSt} and
+                </if>
+                <if test="update_timeEd!=null">
+                    `update_time` &lt;= #{update_timeEd} and
+                </if>
+                <if test="uuidList != null">
+                    `uuid` in
+                    <foreach collection="uuidList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyUuid!=null and fuzzyUuid.size()>0">
+                    (
+                    <foreach collection="fuzzyUuid" separator="or" item="item">
+                        `Uuid` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyUuid!=null and rightFuzzyUuid.size()>0">
+                    (
+                    <foreach collection="rightFuzzyUuid" separator="or" item="item">
+                        `Uuid` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+            </if>
+        </trim>
+        limit 1
+    </select>
+
+    <sql id="allResult">
+        <trim suffixOverrides=",">
+            `id`,
+            `username`,
+            `passwd`,
+            `salt`,
+            `create_time`,
+            `update_time`,
+            `uuid`,
+        </trim>
+    </sql>
+
+
+    <sql id="baseResult">
+        <trim suffixOverrides=",">
+            <if test="(_parameter instanceof com.agh0st.nastoolserver.object.PO.User$QueryBuilder) == true">
+
+                <if test="fetchFields==null">
+                    <include refid="allResult"></include>
+                </if>
+                <if test="fetchFields!=null">
+                    <if test="fetchFields.AllFields !=null">
+                        <include refid="allResult"></include>
+                    </if>
+                    <if test="fetchFields.AllFields ==null and fetchFields.fetchFields==null and fetchFields.excludeFields==null and fetchFields.otherFields==null">
+                        <include refid="allResult"></include>
+                    </if>
+                    <if test="fetchFields.AllFields==null and fetchFields.fetchFields!=null">
+                        <if test="fetchFields.fetchFields.id==true">
+                            `id`,
+                        </if>
+                        <if test="fetchFields.fetchFields.username==true">
+                            `username`,
+                        </if>
+                        <if test="fetchFields.fetchFields.passwd==true">
+                            `passwd`,
+                        </if>
+                        <if test="fetchFields.fetchFields.salt==true">
+                            `salt`,
+                        </if>
+                        <if test="fetchFields.fetchFields.create_time==true">
+                            `create_time`,
+                        </if>
+                        <if test="fetchFields.fetchFields.update_time==true">
+                            `update_time`,
+                        </if>
+                        <if test="fetchFields.fetchFields.uuid==true">
+                            `uuid`,
+                        </if>
+                    </if>
+                    <if test="fetchFields.AllFields==null and fetchFields.excludeFields!=null">
+                        <if test="fetchFields.excludeFields.id==null">
+                            `id`,
+                        </if>
+                        <if test="fetchFields.excludeFields.username==null">
+                            `username`,
+                        </if>
+                        <if test="fetchFields.excludeFields.passwd==null">
+                            `passwd`,
+                        </if>
+                        <if test="fetchFields.excludeFields.salt==null">
+                            `salt`,
+                        </if>
+                        <if test="fetchFields.excludeFields.create_time==null">
+                            `create_time`,
+                        </if>
+                        <if test="fetchFields.excludeFields.update_time==null">
+                            `update_time`,
+                        </if>
+                        <if test="fetchFields.excludeFields.uuid==null">
+                            `uuid`,
+                        </if>
+                    </if>
+                    <if test="fetchFields.otherFields!=null and fetchFields.otherFields.size>0">
+                        <foreach collection="fetchFields.otherFields" index="index" item="item" separator=",">
+                            `#{item}`
+                        </foreach>
+                    </if>
+                </if>
+            </if>
+            <if test="(_parameter instanceof com.agh0st.nastoolserver.object.PO.User$QueryBuilder) == false">
+                <include refid="allResult"></include>
+            </if>
+
+        </trim>
+    </sql>
+
+
+</mapper>

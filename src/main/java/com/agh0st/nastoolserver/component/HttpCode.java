@@ -20,12 +20,12 @@ public class HttpCode {
 
   public static CodeObject SUCCESS = new CodeObject(0, "success", "执行成功");
   public static CodeObject DATA_ERROR = new CodeObject(1000, "data error", "数据错误");
-  public static CodeObject USER_EXISTS = new CodeObject(1001, "user already exists", "用户已存在");
+  public static CodeObject USER_EXISTS = new CodeObject(1001, "User already exists", "用户已存在");
   public static CodeObject USERNAME_FORMAT_ERROR =
       new CodeObject(1002, "username format doesn't match", "用户名格式错误");
   public static CodeObject PASSWORD_FORMAT_ERROR =
       new CodeObject(1003, "password format doesn't match", "密码格式错误");
-  public static CodeObject NO_SUCH_USER = new CodeObject(1004, "no such user", "无此用户");
+  public static CodeObject NO_SUCH_USER = new CodeObject(1004, "no such User", "无此用户");
   public static CodeObject USERNAME_OR_PASSWORD_ERROR =
       new CodeObject(1005, "username or password error", "用户名或密码错误");
   public static CodeObject ALREADY_LOGIN = new CodeObject(1006, "already logged in", "已经登陆");
