@@ -1,10 +1,8 @@
 package com.agh0st.nastoolserver.object.PO;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
+
 /** @author aghost */
 public class User implements Serializable {
 
@@ -27,10 +25,10 @@ public class User implements Serializable {
   private String salt;
 
   /** isNullAble:0,defaultVal:CURRENT_TIMESTAMP */
-  private java.time.LocalDateTime create_time;
+  private Date create_time;
 
   /** isNullAble:1 */
-  private java.time.LocalDateTime update_time;
+  private Date update_time;
 
   /** isNullAble:0 */
   private String uuid;
@@ -67,19 +65,19 @@ public class User implements Serializable {
     return this.salt;
   }
 
-  public void setCreate_time(java.time.LocalDateTime create_time) {
+  public void setCreate_time(Date create_time) {
     this.create_time = create_time;
   }
 
-  public java.time.LocalDateTime getCreate_time() {
+  public Date getCreate_time() {
     return this.create_time;
   }
 
-  public void setUpdate_time(java.time.LocalDateTime update_time) {
+  public void setUpdate_time(Date update_time) {
     this.update_time = update_time;
   }
 
-  public java.time.LocalDateTime getUpdate_time() {
+  public Date getUpdate_time() {
     return this.update_time;
   }
 
@@ -243,39 +241,39 @@ public class User implements Serializable {
       return this.rightFuzzySalt;
     }
 
-    private List<java.time.LocalDateTime> create_timeList;
+    private List<Date> create_timeList;
 
-    public List<java.time.LocalDateTime> getCreate_timeList() {
+    public List<Date> getCreate_timeList() {
       return this.create_timeList;
     }
 
-    private java.time.LocalDateTime create_timeSt;
+    private Date create_timeSt;
 
-    private java.time.LocalDateTime create_timeEd;
+    private Date create_timeEd;
 
-    public java.time.LocalDateTime getCreate_timeSt() {
+    public Date getCreate_timeSt() {
       return this.create_timeSt;
     }
 
-    public java.time.LocalDateTime getCreate_timeEd() {
+    public Date getCreate_timeEd() {
       return this.create_timeEd;
     }
 
-    private List<java.time.LocalDateTime> update_timeList;
+    private List<Date> update_timeList;
 
-    public List<java.time.LocalDateTime> getUpdate_timeList() {
+    public List<Date> getUpdate_timeList() {
       return this.update_timeList;
     }
 
-    private java.time.LocalDateTime update_timeSt;
+    private Date update_timeSt;
 
-    private java.time.LocalDateTime update_timeEd;
+    private Date update_timeEd;
 
-    public java.time.LocalDateTime getUpdate_timeSt() {
+    public Date getUpdate_timeSt() {
       return this.update_timeSt;
     }
 
-    public java.time.LocalDateTime getUpdate_timeEd() {
+    public Date getUpdate_timeEd() {
       return this.update_timeEd;
     }
 
@@ -477,34 +475,33 @@ public class User implements Serializable {
       return this;
     }
 
-    public QueryBuilder create_timeBetWeen(
-        java.time.LocalDateTime create_timeSt, java.time.LocalDateTime create_timeEd) {
+    public QueryBuilder create_timeBetWeen(Date create_timeSt, Date create_timeEd) {
       this.create_timeSt = create_timeSt;
       this.create_timeEd = create_timeEd;
       return this;
     }
 
-    public QueryBuilder create_timeGreaterEqThan(java.time.LocalDateTime create_timeSt) {
+    public QueryBuilder create_timeGreaterEqThan(Date create_timeSt) {
       this.create_timeSt = create_timeSt;
       return this;
     }
 
-    public QueryBuilder create_timeLessEqThan(java.time.LocalDateTime create_timeEd) {
+    public QueryBuilder create_timeLessEqThan(Date create_timeEd) {
       this.create_timeEd = create_timeEd;
       return this;
     }
 
-    public QueryBuilder create_time(java.time.LocalDateTime create_time) {
+    public QueryBuilder create_time(Date create_time) {
       setCreate_time(create_time);
       return this;
     }
 
-    public QueryBuilder create_timeList(java.time.LocalDateTime... create_time) {
+    public QueryBuilder create_timeList(Date... create_time) {
       this.create_timeList = solveNullList(create_time);
       return this;
     }
 
-    public QueryBuilder create_timeList(List<java.time.LocalDateTime> create_time) {
+    public QueryBuilder create_timeList(List<Date> create_time) {
       this.create_timeList = create_time;
       return this;
     }
@@ -519,34 +516,33 @@ public class User implements Serializable {
       return this;
     }
 
-    public QueryBuilder update_timeBetWeen(
-        java.time.LocalDateTime update_timeSt, java.time.LocalDateTime update_timeEd) {
+    public QueryBuilder update_timeBetWeen(Date update_timeSt, Date update_timeEd) {
       this.update_timeSt = update_timeSt;
       this.update_timeEd = update_timeEd;
       return this;
     }
 
-    public QueryBuilder update_timeGreaterEqThan(java.time.LocalDateTime update_timeSt) {
+    public QueryBuilder update_timeGreaterEqThan(Date update_timeSt) {
       this.update_timeSt = update_timeSt;
       return this;
     }
 
-    public QueryBuilder update_timeLessEqThan(java.time.LocalDateTime update_timeEd) {
+    public QueryBuilder update_timeLessEqThan(Date update_timeEd) {
       this.update_timeEd = update_timeEd;
       return this;
     }
 
-    public QueryBuilder update_time(java.time.LocalDateTime update_time) {
+    public QueryBuilder update_time(Date update_time) {
       setUpdate_time(update_time);
       return this;
     }
 
-    public QueryBuilder update_timeList(java.time.LocalDateTime... update_time) {
+    public QueryBuilder update_timeList(Date... update_time) {
       this.update_timeList = solveNullList(update_time);
       return this;
     }
 
-    public QueryBuilder update_timeList(List<java.time.LocalDateTime> update_time) {
+    public QueryBuilder update_timeList(List<Date> update_time) {
       this.update_timeList = update_time;
       return this;
     }
@@ -723,39 +719,39 @@ public class User implements Serializable {
       return this.rightFuzzySalt;
     }
 
-    private List<java.time.LocalDateTime> create_timeList;
+    private List<Date> create_timeList;
 
-    public List<java.time.LocalDateTime> getCreate_timeList() {
+    public List<Date> getCreate_timeList() {
       return this.create_timeList;
     }
 
-    private java.time.LocalDateTime create_timeSt;
+    private Date create_timeSt;
 
-    private java.time.LocalDateTime create_timeEd;
+    private Date create_timeEd;
 
-    public java.time.LocalDateTime getCreate_timeSt() {
+    public Date getCreate_timeSt() {
       return this.create_timeSt;
     }
 
-    public java.time.LocalDateTime getCreate_timeEd() {
+    public Date getCreate_timeEd() {
       return this.create_timeEd;
     }
 
-    private List<java.time.LocalDateTime> update_timeList;
+    private List<Date> update_timeList;
 
-    public List<java.time.LocalDateTime> getUpdate_timeList() {
+    public List<Date> getUpdate_timeList() {
       return this.update_timeList;
     }
 
-    private java.time.LocalDateTime update_timeSt;
+    private Date update_timeSt;
 
-    private java.time.LocalDateTime update_timeEd;
+    private Date update_timeEd;
 
-    public java.time.LocalDateTime getUpdate_timeSt() {
+    public Date getUpdate_timeSt() {
       return this.update_timeSt;
     }
 
-    public java.time.LocalDateTime getUpdate_timeEd() {
+    public Date getUpdate_timeEd() {
       return this.update_timeEd;
     }
 
@@ -893,56 +889,54 @@ public class User implements Serializable {
       return this;
     }
 
-    public ConditionBuilder create_timeBetWeen(
-        java.time.LocalDateTime create_timeSt, java.time.LocalDateTime create_timeEd) {
+    public ConditionBuilder create_timeBetWeen(Date create_timeSt, Date create_timeEd) {
       this.create_timeSt = create_timeSt;
       this.create_timeEd = create_timeEd;
       return this;
     }
 
-    public ConditionBuilder create_timeGreaterEqThan(java.time.LocalDateTime create_timeSt) {
+    public ConditionBuilder create_timeGreaterEqThan(Date create_timeSt) {
       this.create_timeSt = create_timeSt;
       return this;
     }
 
-    public ConditionBuilder create_timeLessEqThan(java.time.LocalDateTime create_timeEd) {
+    public ConditionBuilder create_timeLessEqThan(Date create_timeEd) {
       this.create_timeEd = create_timeEd;
       return this;
     }
 
-    public ConditionBuilder create_timeList(java.time.LocalDateTime... create_time) {
+    public ConditionBuilder create_timeList(Date... create_time) {
       this.create_timeList = solveNullList(create_time);
       return this;
     }
 
-    public ConditionBuilder create_timeList(List<java.time.LocalDateTime> create_time) {
+    public ConditionBuilder create_timeList(List<Date> create_time) {
       this.create_timeList = create_time;
       return this;
     }
 
-    public ConditionBuilder update_timeBetWeen(
-        java.time.LocalDateTime update_timeSt, java.time.LocalDateTime update_timeEd) {
+    public ConditionBuilder update_timeBetWeen(Date update_timeSt, Date update_timeEd) {
       this.update_timeSt = update_timeSt;
       this.update_timeEd = update_timeEd;
       return this;
     }
 
-    public ConditionBuilder update_timeGreaterEqThan(java.time.LocalDateTime update_timeSt) {
+    public ConditionBuilder update_timeGreaterEqThan(Date update_timeSt) {
       this.update_timeSt = update_timeSt;
       return this;
     }
 
-    public ConditionBuilder update_timeLessEqThan(java.time.LocalDateTime update_timeEd) {
+    public ConditionBuilder update_timeLessEqThan(Date update_timeEd) {
       this.update_timeEd = update_timeEd;
       return this;
     }
 
-    public ConditionBuilder update_timeList(java.time.LocalDateTime... update_time) {
+    public ConditionBuilder update_timeList(Date... update_time) {
       this.update_timeList = solveNullList(update_time);
       return this;
     }
 
-    public ConditionBuilder update_timeList(List<java.time.LocalDateTime> update_time) {
+    public ConditionBuilder update_timeList(List<Date> update_time) {
       this.update_timeList = update_time;
       return this;
     }
@@ -1023,12 +1017,12 @@ public class User implements Serializable {
       return this;
     }
 
-    public Builder create_time(java.time.LocalDateTime create_time) {
+    public Builder create_time(Date create_time) {
       this.obj.setCreate_time(create_time);
       return this;
     }
 
-    public Builder update_time(java.time.LocalDateTime update_time) {
+    public Builder update_time(Date update_time) {
       this.obj.setUpdate_time(update_time);
       return this;
     }

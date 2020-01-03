@@ -15,7 +15,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `nastool`
 --
-
+CREATE DATABASE IF NOT EXISTS `nastool` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `nastool`;
 -- --------------------------------------------------------
 
 --

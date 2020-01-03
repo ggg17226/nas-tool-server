@@ -1,11 +1,13 @@
 package com.agh0st.nastoolserver;
 
 import com.agh0st.nastoolserver.service.MailService;
+import com.agh0st.nastoolserver.utils.AliPush;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -26,6 +28,7 @@ import java.util.stream.IntStream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ImportResource(locations = {"classpath:kaptcha.xml"})
 @Log4j2
 public class NasToolServerApplicationTests {
   //  @Resource private JavaMailSender mailSender;
@@ -35,18 +38,24 @@ public class NasToolServerApplicationTests {
   //  private String emailSender;
 
   @Resource MailService mailService;
+  @Resource AliPush aliPush;
+
+  @Test
+  public void getDeviceList() {
+    log.info(aliPush.getDevices("test"));
+  }
 
   @Test
   public void contextLoads() {}
 
   @Test
   public void testSendMail() throws MessagingException {
-    mailService.sendNotifyEmail(
-        "ggg17226@gmail.com",
-        "测试邮件的标题",
-        "通知事件",
-        new Date(System.currentTimeMillis() - 100000),
-        "通知\n详情");
+    //    mailService.sendNotifyEmail(
+    //        "ggg17226@gmail.com",
+    //        "测试邮件的标题",
+    //        "通知事件",
+    //        new Date(System.currentTimeMillis() - 100000),
+    //        "通知\n详情");
     //    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     //
     //    Context context = new Context();
@@ -64,5 +73,6 @@ public class NasToolServerApplicationTests {
     //    message.setSubject("服务器通知");
     //    message.setText(content, true);
     //    mailSender.send(mimeMessage);
+
   }
 }

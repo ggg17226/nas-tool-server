@@ -20,20 +20,23 @@ public class SessionInit implements WebMvcConfigurer {
     "/serverTime",
     "/codeInfo",
     /** user_api */
-    "/V1/User/login",
-    "/V1/User/logout"
+    "/V1/user/login",
+    "/V1/user/logout",
+    "/V1/user/reg",
+    "/V1/user/captcha",
+    "/V1/test/send**"
   };
 
-//  @Override
-//  public void addInterceptors(InterceptorRegistry registry) {
-//    InterceptorRegistration interceptorRegistration =
-//        registry.addInterceptor(new SessionInterceptor());
-//    Arrays.asList(excludePaths).stream()
-//        .forEach(
-//            item -> {
-//              log.trace("add excludePath: {}", item);
-//              interceptorRegistration.excludePathPatterns(item);
-//            });
-//    interceptorRegistration.addPathPatterns("/**");
-//  }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    InterceptorRegistration interceptorRegistration =
+        registry.addInterceptor(new SessionInterceptor());
+    Arrays.asList(excludePaths).stream()
+        .forEach(
+            item -> {
+              //              log.trace("add excludePath: {}", item);
+              interceptorRegistration.excludePathPatterns(item);
+            });
+    interceptorRegistration.addPathPatterns("/**");
+  }
 }
