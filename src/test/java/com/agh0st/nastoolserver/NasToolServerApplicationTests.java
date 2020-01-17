@@ -31,11 +31,11 @@ import java.util.stream.IntStream;
 @ImportResource(locations = {"classpath:kaptcha.xml"})
 @Log4j2
 public class NasToolServerApplicationTests {
-  //  @Resource private JavaMailSender mailSender;
-  //  @Resource private TemplateEngine templateEngine;
-  //
-  //  @org.springframework.beans.factory.annotation.Value("${app.mail.username}")
-  //  private String emailSender;
+  @Resource private JavaMailSender mailSender;
+  @Resource private TemplateEngine templateEngine;
+
+  @org.springframework.beans.factory.annotation.Value("${app.mail.username}")
+  private String emailSender;
 
   @Resource MailService mailService;
   @Resource AliPush aliPush;
@@ -50,29 +50,28 @@ public class NasToolServerApplicationTests {
 
   @Test
   public void testSendMail() throws MessagingException {
-    //    mailService.sendNotifyEmail(
-    //        "ggg17226@gmail.com",
-    //        "测试邮件的标题",
-    //        "通知事件",
-    //        new Date(System.currentTimeMillis() - 100000),
-    //        "通知\n详情");
-    //    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    //
-    //    Context context = new Context();
-    //    context.setVariable("notifyDate", dateFormat.format(new Date()));
-    //    context.setVariable("notifyEvent", "事件");
-    //    StringJoiner stringJoiner = new StringJoiner("\n");
-    //    IntStream.range(0, 100).forEach(i -> stringJoiner.add(UUID.randomUUID().toString()));
-    //    context.setVariable("notifyDetails", "详情？？？？？" + stringJoiner.toString());
-    //    String content = templateEngine.process("mail/notify", context);
-    //
-    //    MimeMessage mimeMessage = mailSender.createMimeMessage();
-    //    MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-    //    mimeMessage.setFrom(emailSender);
-    //    message.setTo("ggg17226@gmail.com");
-    //    message.setSubject("服务器通知");
-    //    message.setText(content, true);
-    //    mailSender.send(mimeMessage);
+    mailService.sendNotifyEmail(
+        "ggg17226@gmail.com",
+        "测试邮件的标题",
+        "通知事件",
+        new Date(System.currentTimeMillis() - 100000),
+        "通知\n详情");
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    Context context = new Context();
+    context.setVariable("notifyDate", dateFormat.format(new Date()));
+    context.setVariable("notifyEvent", "事件");
+    StringJoiner stringJoiner = new StringJoiner("\n");
+    IntStream.range(0, 100).forEach(i -> stringJoiner.add(UUID.randomUUID().toString()));
+    context.setVariable("notifyDetails", "详情？？？？？" + stringJoiner.toString());
+    String content = templateEngine.process("mail/notify", context);
+
+    MimeMessage mimeMessage = mailSender.createMimeMessage();
+    MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+    mimeMessage.setFrom(emailSender);
+    message.setTo("ggg17226@gmail.com");
+    message.setSubject("服务器通知");
+    message.setText(content, true);
+    mailSender.send(mimeMessage);
   }
 }

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.7.RELEASE</version>
+        <version>2.2.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.agh0st</groupId>
@@ -19,18 +19,28 @@
         <commons-codec.version>1.13</commons-codec.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
-        <fastjson.version>1.2.60</fastjson.version>
-        <netty.version>4.1.42.Final</netty.version>
-        <druid.version>1.1.20</druid.version>
-        <mybatis.version>2.1.0</mybatis.version>
-        <pagehelper.version>1.2.12</pagehelper.version>
-        <jedis.version>2.10.2</jedis.version>
+        <fastjson.version>1.2.62</fastjson.version>
+        <netty.version>4.1.44.Final</netty.version>
+        <druid.version>1.1.21</druid.version>
+        <mybatis.version>2.1.1</mybatis.version>
+        <pagehelper.version>1.2.13</pagehelper.version>
+<!--        <jedis.version>2.10.2</jedis.version>-->
         <kaptcha.version>2.3.2</kaptcha.version>
         <alisdk.core.version>4.4.4</alisdk.core.version>
         <alisdk.push.version>3.10.1</alisdk.push.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-validation</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

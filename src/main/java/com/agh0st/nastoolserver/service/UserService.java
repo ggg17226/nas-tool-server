@@ -53,8 +53,6 @@ public class UserService {
     return userInfo;
   }
 
-
-
   /**
    * 新建用户
    *
@@ -79,7 +77,7 @@ public class UserService {
     user.setPasswd(
         DigestUtils.md5Hex(DigestUtils.sha1Hex(password) + DigestUtils.md5Hex(user.getSalt())));
     try {
-      return (userMapper.insertUser(user) == 1);
+      return (userMapper.insertSelective(user) == 1);
     } catch (Exception e) {
       return false;
     }

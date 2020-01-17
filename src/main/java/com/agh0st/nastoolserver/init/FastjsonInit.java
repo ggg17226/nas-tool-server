@@ -17,7 +17,12 @@ public class FastjsonInit implements WebMvcConfigurer {
   public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
     FastJsonConfig fastJsonConfig = new FastJsonConfig();
-    fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+    fastJsonConfig.setSerializerFeatures(
+//        SerializerFeature.PrettyFormat,
+        SerializerFeature.DisableCircularReferenceDetect,
+        SerializerFeature.WriteNullListAsEmpty,
+        SerializerFeature.WriteNonStringKeyAsString,
+        SerializerFeature.WriteDateUseDateFormat);
     fastConverter.setFastJsonConfig(fastJsonConfig);
     converters.add(fastConverter);
   }
