@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 @Service
@@ -84,7 +84,7 @@ public class UserService {
    */
   @Transactional
   public boolean insertUser(@NotNull String username, @NotNull String password)
-          throws SqlRuntimeException, UserAlreadyExistException {
+      throws SqlRuntimeException, UserAlreadyExistException {
     User userInfo = null;
     try {
       userInfo = userMapper.getUserInfoByUsername(username);
@@ -139,7 +139,7 @@ public class UserService {
    * @return salt
    */
   private String generateSalt() {
-    int start = (new Random()).nextInt(12);
+    int start = (new SecureRandom()).nextInt(12);
     return DigestUtils.md5Hex(UUID.randomUUID().toString().getBytes()).substring(start, start + 8);
   }
 
