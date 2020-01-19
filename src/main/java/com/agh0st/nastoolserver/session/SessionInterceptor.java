@@ -1,20 +1,33 @@
 package com.agh0st.nastoolserver.session;
 
-import com.agh0st.nastoolserver.component.HttpCode;
-import com.agh0st.nastoolserver.object.VO.HttpDataVo;
+import com.agh0st.nastoolserver.exception.UserNotFoundException;
+import com.agh0st.nastoolserver.object.entity.User;
+import com.agh0st.nastoolserver.object.response.HttpCode;
+import com.agh0st.nastoolserver.object.response.HttpDataResponse;
+import com.agh0st.nastoolserver.service.UserService;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
-import org.eclipse.jetty.client.HttpResponse;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Configuration
+@Log4j2
 public class SessionInterceptor implements HandlerInterceptor {
+  @Resource private UserService userService;
+
+  private void sendNeedLogin(HttpServletResponse rsp) throws IOException {
+    rsp.setStatus(403);
+    rsp.setHeader("Content-Type", "application/json;charset=utf-8");
+    rsp.getWriter().write(JSON.toJSONString(new HttpDataResponse(HttpCode.NEED_LOGIN)));
+  }
+
   @Override
   public boolean preHandle(HttpServletRequest req, HttpServletResponse rsp, Object handler)
       throws IOException {
@@ -25,12 +38,45 @@ public class SessionInterceptor implements HandlerInterceptor {
     } catch (Exception ex) {
       userInfo = null;
     }
+    long lastCheck = 0;
+    try {
+      lastCheck = (long) session.getAttribute("lastCheck");
+    } catch (Exception ex) {
+      lastCheck = 0;
+    }
     if (!StringUtils.isEmpty(userInfo)) {
-      return true;
+      if ((System.currentTimeMillis() - lastCheck) > 300000) {
+        User user = JSON.parseObject(userInfo, User.class);
+        if (StringUtils.isEmpty(user.getUsername())) {
+          session.invalidate();
+          sendNeedLogin(rsp);
+          return false;
+        }
+        User user1 = null;
+        try {
+          user1 = userService.getUserInfo(user.getUsername());
+        } catch (UserNotFoundException e) {
+          session.invalidate();
+          sendNeedLogin(rsp);
+          return false;
+        }
+        if (user1.getPasswd().equals(user.getPasswd())) {
+          String UserInfo1 = JSON.toJSONString(user1);
+          if (!UserInfo1.equals(userInfo)) {
+            session.setAttribute("userInfo", UserInfo1);
+          }
+          session.setAttribute("lastCheck", System.currentTimeMillis());
+          return true;
+        } else {
+          session.invalidate();
+          sendNeedLogin(rsp);
+          return false;
+        }
+      } else {
+        return true;
+      }
     } else {
-      rsp.setStatus(200);
-      rsp.setHeader("Content-Type", "application/json;charset=utf-8");
-      rsp.getWriter().write(JSON.toJSONString(new HttpDataVo(HttpCode.NEED_LOGIN)));
+      sendNeedLogin(rsp);
       return false;
     }
   }

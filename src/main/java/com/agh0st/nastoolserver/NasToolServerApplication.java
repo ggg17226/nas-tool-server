@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@MapperScan("com.agh0st.nastoolserver.Mapper")
+@MapperScan("com.agh0st.nastoolserver.mapper")
 @Log4j2
 @ImportResource(locations = {"classpath:kaptcha.xml"})
 public class NasToolServerApplication {

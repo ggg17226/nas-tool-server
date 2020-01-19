@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 
 @Configuration
@@ -27,14 +28,14 @@ public class SessionInit implements WebMvcConfigurer {
     "/V1/test/send**"
   };
 
+  @Resource SessionInterceptor sessionInterceptor;
+
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    InterceptorRegistration interceptorRegistration =
-        registry.addInterceptor(new SessionInterceptor());
+    InterceptorRegistration interceptorRegistration = registry.addInterceptor(sessionInterceptor);
     Arrays.asList(excludePaths).stream()
         .forEach(
             item -> {
-              //              log.trace("add excludePath: {}", item);
               interceptorRegistration.excludePathPatterns(item);
             });
     interceptorRegistration.addPathPatterns("/**");

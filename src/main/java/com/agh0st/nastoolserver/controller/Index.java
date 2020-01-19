@@ -1,10 +1,11 @@
 package com.agh0st.nastoolserver.controller;
 
-import com.agh0st.nastoolserver.component.HttpCode;
-import com.agh0st.nastoolserver.object.VO.HttpDataVo;
-import com.alibaba.fastjson.JSONObject;
+import com.agh0st.nastoolserver.object.response.HttpCode;
+import com.agh0st.nastoolserver.object.response.HttpDataResponse;
+import com.agh0st.nastoolserver.object.response.ServerTimeResponse;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,19 +22,17 @@ public class Index {
       produces = "application/json; charset=utf-8")
   @ResponseBody
   public Object index() {
-    return new HttpDataVo(HttpCode.PERMISSION_DENIED);
+    return new HttpDataResponse(HttpCode.PERMISSION_DENIED);
   }
 
-  @RequestMapping(
+  @GetMapping(
       value = {"/serverTime"},
       produces = "application/json; charset=utf-8")
   @ResponseBody
   public Object serverTime() {
-    HttpDataVo httpDataVo = new HttpDataVo(HttpCode.SUCCESS);
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("timestamp", (int) (System.currentTimeMillis() / 1000));
-    httpDataVo.setData(jsonObject);
-    return httpDataVo;
+    HttpDataResponse httpDataResponse = new HttpDataResponse(HttpCode.SUCCESS);
+    httpDataResponse.setData(new ServerTimeResponse((int) (System.currentTimeMillis() / 1000)));
+    return httpDataResponse;
   }
 
   /**
@@ -41,7 +40,7 @@ public class Index {
    *
    * @return
    */
-  @RequestMapping(
+  @GetMapping(
       value = {"/codeInfo"},
       produces = "application/json; charset=utf-8")
   @ResponseBody
@@ -62,12 +61,12 @@ public class Index {
           resultMap.put(object.getCode(), tmpMap);
         } catch (Exception e) {
           log.error("构造所有返回值结构出错：" + ExceptionUtils.getStackTrace(e));
-          return new HttpDataVo(HttpCode.SYSTEM_ERROR);
+          return new HttpDataResponse(HttpCode.SYSTEM_ERROR);
         }
       }
     }
-    HttpDataVo httpDataVo = new HttpDataVo(HttpCode.SUCCESS);
-    httpDataVo.setData(resultMap);
-    return httpDataVo;
+    HttpDataResponse httpDataResponse = new HttpDataResponse(HttpCode.SUCCESS);
+    httpDataResponse.setData(resultMap);
+    return httpDataResponse;
   }
 }

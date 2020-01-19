@@ -1,30 +1,31 @@
 package com.agh0st.nastoolserver.controller.V1.user;
 
-import com.agh0st.nastoolserver.component.HttpCode;
-import com.agh0st.nastoolserver.object.PO.User;
-import com.agh0st.nastoolserver.object.VO.HttpDataVo;
+import com.agh0st.nastoolserver.exception.PasswordIncorrectException;
+import com.agh0st.nastoolserver.exception.SqlRuntimeException;
+import com.agh0st.nastoolserver.exception.UserAlreadyExistException;
+import com.agh0st.nastoolserver.exception.UserNotFoundException;
+import com.agh0st.nastoolserver.object.entity.User;
+import com.agh0st.nastoolserver.object.request.LoginRequest;
+import com.agh0st.nastoolserver.object.response.HttpCode;
+import com.agh0st.nastoolserver.object.response.HttpDataResponse;
 import com.agh0st.nastoolserver.service.UserService;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.lang.Nullable;
-import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/V1/user")
@@ -39,16 +40,14 @@ public class UserController {
   /**
    * 检查提交数据
    *
-   * @param data
+   * @param loginRequest
    * @return
    */
-  private boolean checkUserUploadData(Map<String, String> data) {
-    return data == null
-        || !data.containsKey("username")
-        || !data.containsKey("password")
-        || StringUtils.isEmpty(data.get("password"))
-        || StringUtils.isEmpty(data.get("username"))
-        || StringUtils.isEmpty(data.get("captcha"));
+  private boolean checkUserUploadData(LoginRequest loginRequest) {
+    return loginRequest == null
+        || StringUtils.isEmpty(loginRequest.getUsername())
+        || StringUtils.isEmpty(loginRequest.getPassword())
+        || StringUtils.isEmpty(loginRequest.getCaptcha());
   }
 
   /**
@@ -60,10 +59,12 @@ public class UserController {
     try {
       session.removeAttribute(USER_CAPTCHA_GEN_TIME_KEY);
     } catch (Exception e) {
+      log.error(ExceptionUtils.getStackTrace(e));
     }
     try {
       session.removeAttribute(USER_CAPTCHA_CODE_KEY);
     } catch (Exception e) {
+      log.error(ExceptionUtils.getStackTrace(e));
     }
   }
 
@@ -76,10 +77,12 @@ public class UserController {
    */
   private boolean checkCaptchaCode(HttpSession session, String captchaCode) {
     String code, time;
+    captchaCode = captchaCode.trim();
     try {
       code = session.getAttribute(USER_CAPTCHA_CODE_KEY).toString();
       time = session.getAttribute(USER_CAPTCHA_GEN_TIME_KEY).toString();
     } catch (Exception e) {
+      log.error(ExceptionUtils.getStackTrace(e));
       clearCaptchaSession(session);
       return false;
     }
@@ -91,6 +94,7 @@ public class UserController {
     try {
       genTime = Long.parseLong(time);
     } catch (Exception e) {
+      log.error(ExceptionUtils.getStackTrace(e));
       clearCaptchaSession(session);
       return false;
     }
@@ -112,7 +116,7 @@ public class UserController {
       produces = "application/json; charset=utf-8")
   @ResponseBody
   public Object index() {
-    return new HttpDataVo(HttpCode.PERMISSION_DENIED);
+    return new HttpDataResponse(HttpCode.PERMISSION_DENIED);
   }
 
   /**
@@ -121,7 +125,7 @@ public class UserController {
    * @param session
    * @return
    */
-  @RequestMapping(
+  @GetMapping(
       value = {"/getUUID"},
       produces = "application/json; charset=utf-8")
   @ResponseBody
@@ -129,15 +133,16 @@ public class UserController {
     try {
       String userInfoStr = (String) session.getAttribute("userInfo");
       if (userInfoStr == null || StringUtils.isEmpty(userInfoStr)) {
-        return new HttpDataVo(HttpCode.SYSTEM_ERROR);
+        return new HttpDataResponse(HttpCode.SYSTEM_ERROR);
       }
       JSONObject userInfo = JSON.parseObject(userInfoStr);
       if (userInfo == null || userInfo.size() < 1 || !userInfo.containsKey("uuid")) {
-        return new HttpDataVo(HttpCode.SYSTEM_ERROR);
+        return new HttpDataResponse(HttpCode.SYSTEM_ERROR);
       }
-      return new HttpDataVo(HttpCode.SUCCESS, userInfo.getString("uuid"));
+      return new HttpDataResponse(HttpCode.SUCCESS, userInfo.getString("uuid"));
     } catch (Exception e) {
-      return new HttpDataVo(HttpCode.SYSTEM_ERROR);
+      log.error(ExceptionUtils.getStackTrace(e));
+      return new HttpDataResponse(HttpCode.SYSTEM_ERROR);
     }
   }
 
@@ -146,94 +151,89 @@ public class UserController {
    *
    * @return
    */
-  @RequestMapping(
+  @GetMapping(
       value = {"/check"},
       produces = "application/json; charset=utf-8")
   @ResponseBody
-  public Object check(HttpSession session) {
+  public Object check() {
     JSONObject result = new JSONObject();
     result.put("status", true);
-    return new HttpDataVo(HttpCode.SUCCESS, result);
+    return new HttpDataResponse(HttpCode.SUCCESS, result);
   }
 
   /**
    * 登陆
    *
    * @param session
-   * @param req
-   * @param data
+   * @param loginRequest
    * @return
    */
-  @RequestMapping(
+  @PostMapping(
       value = {"/login"},
       produces = "application/json; charset=utf-8")
   @ResponseBody
-  public Object login(
-      HttpSession session,
-      HttpServletRequest req,
-      @Nullable @RequestBody TreeMap<String, String> data) {
-    if (!req.getMethod().equals("POST")) {
-      return new HttpDataVo(HttpCode.METHOD_DENIED);
+  public Object login(HttpSession session, @NotNull @RequestBody LoginRequest loginRequest) {
+    if (checkUserUploadData(loginRequest)) {
+      return new HttpDataResponse(HttpCode.DATA_DOES_NOT_EXIST);
     }
-    if (checkUserUploadData(data)) {
-      return new HttpDataVo(HttpCode.DATA_DOES_NOT_EXIST);
-    }
-    if (!checkCaptchaCode(session, data.get("captcha"))) {
-      return new HttpDataVo(HttpCode.CAPTCHA_ERROR);
+    if (!checkCaptchaCode(session, loginRequest.getCaptcha())) {
+      return new HttpDataResponse(HttpCode.CAPTCHA_ERROR);
     }
 
-    String username = data.get("username").trim();
-    String password = data.get("password").trim();
-    User userInfo = userService.getUserInfo(username, password);
-
-    if (userInfo == null) {
-      return new HttpDataVo(HttpCode.USERNAME_OR_PASSWORD_ERROR);
+    String username = loginRequest.getUsername().trim();
+    String password = loginRequest.getPassword().trim();
+    User userInfo = null;
+    try {
+      userInfo = userService.getUserInfo(username, password);
+    } catch (UserNotFoundException e) {
+      return new HttpDataResponse(HttpCode.USERNAME_OR_PASSWORD_ERROR);
+    } catch (PasswordIncorrectException e) {
+      return new HttpDataResponse(HttpCode.USERNAME_OR_PASSWORD_ERROR);
     }
 
     session.setAttribute("uid", userInfo.getId());
     session.setAttribute("userInfo", JSON.toJSONString(userInfo));
 
-    return new HttpDataVo(HttpCode.SUCCESS);
+    return new HttpDataResponse(HttpCode.SUCCESS);
   }
 
   /**
    * 注册
    *
    * @param session
-   * @param req
-   * @param data
+   * @param loginRequest
    * @return
    */
-  @RequestMapping(
+  @PostMapping(
       value = {"/reg"},
       produces = "application/json; charset=utf-8")
   @ResponseBody
-  public Object reg(
-      HttpSession session,
-      HttpServletRequest req,
-      @Nullable @RequestBody TreeMap<String, String> data) {
-    if (!req.getMethod().equals("POST")) {
-      return new HttpDataVo(HttpCode.METHOD_DENIED);
+  public Object reg(HttpSession session, @Nullable @RequestBody LoginRequest loginRequest) {
+    if (checkUserUploadData(loginRequest)) {
+      return new HttpDataResponse(HttpCode.DATA_DOES_NOT_EXIST);
     }
-    if (checkUserUploadData(data)) {
-      return new HttpDataVo(HttpCode.DATA_DOES_NOT_EXIST);
+    if (!checkCaptchaCode(session, loginRequest.getCaptcha())) {
+      return new HttpDataResponse(HttpCode.CAPTCHA_ERROR);
     }
-    if (!checkCaptchaCode(session, data.get("captcha"))) {
-      return new HttpDataVo(HttpCode.CAPTCHA_ERROR);
-    }
-    String username = data.get("username").trim();
-    String password = data.get("password").trim();
+    String username = loginRequest.getUsername().trim();
+    String password = loginRequest.getPassword().trim();
     if (username.length() < 5) {
-      return new HttpDataVo(HttpCode.USERNAME_FORMAT_ERROR);
+      return new HttpDataResponse(HttpCode.USERNAME_FORMAT_ERROR);
     }
     if (password.length() < 8) {
-      return new HttpDataVo(HttpCode.PASSWORD_FORMAT_ERROR);
+      return new HttpDataResponse(HttpCode.PASSWORD_FORMAT_ERROR);
     }
-    boolean insertUserResult =
-        userService.insertUser(data.get("username").trim(), data.get("password").trim());
+    boolean insertUserResult = false;
+    try {
+      insertUserResult = userService.insertUser(username, password);
+    } catch (SqlRuntimeException e) {
+      new HttpDataResponse(HttpCode.DATABASE_ERROR);
+    } catch (UserAlreadyExistException e) {
+      return new HttpDataResponse(HttpCode.USER_EXISTS);
+    }
     return insertUserResult
-        ? (new HttpDataVo(HttpCode.SUCCESS))
-        : (new HttpDataVo(HttpCode.USER_EXISTS));
+        ? (new HttpDataResponse(HttpCode.SUCCESS))
+        : (new HttpDataResponse(HttpCode.USER_EXISTS));
   }
 
   /**
@@ -249,7 +249,7 @@ public class UserController {
   public Object logout(HttpSession session) {
 
     session.invalidate();
-    return new HttpDataVo(HttpCode.SUCCESS);
+    return new HttpDataResponse(HttpCode.SUCCESS);
   }
 
   /**
@@ -272,23 +272,13 @@ public class UserController {
     session.setAttribute(USER_CAPTCHA_GEN_TIME_KEY, System.currentTimeMillis() + "");
 
     BufferedImage bi = captchaProducer.createImage(capText);
-    ServletOutputStream out = null;
-    try {
-      out = rsp.getOutputStream();
-    } catch (Exception e) {
+
+    try (ServletOutputStream out = rsp.getOutputStream()) {
+      ImageIO.write(bi, "png", out);
+    } catch (IOException e) {
+      log.error(ExceptionUtils.getStackTrace(e));
       rsp.setStatus(502);
       return;
-    }
-
-    try {
-      ImageIO.write(bi, "png", out);
-    } catch (Exception e) {
-      rsp.setStatus(502);
-    } finally {
-      try {
-        out.close();
-      } catch (Exception e) {
-      }
     }
   }
 }

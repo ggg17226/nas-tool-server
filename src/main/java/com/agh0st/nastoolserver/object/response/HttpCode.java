@@ -1,9 +1,7 @@
-package com.agh0st.nastoolserver.component;
+package com.agh0st.nastoolserver.object.response;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
-@Component
 public class HttpCode {
   @Data
   public static class CodeObject {

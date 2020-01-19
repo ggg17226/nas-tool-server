@@ -1,6 +1,6 @@
-package com.agh0st.nastoolserver.Mapper;
+package com.agh0st.nastoolserver.mapper;
 
-import com.agh0st.nastoolserver.object.PO.User;
+import com.agh0st.nastoolserver.object.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
@@ -20,7 +20,7 @@ public interface UserMapper {
 
   int updateByPrimaryKey(User record);
 
-  @ResultMap("com.agh0st.nastoolserver.Mapper.UserMapper.BaseResultMap")
+  @ResultMap("com.agh0st.nastoolserver.mapper.UserMapper.BaseResultMap")
   @Select("select * from user where `username`=#{username} limit 1")
   User getUserInfoByUsername(@NotNull @Param("username") String username);
 }

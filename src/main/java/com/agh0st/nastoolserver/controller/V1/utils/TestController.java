@@ -1,8 +1,9 @@
 package com.agh0st.nastoolserver.controller.V1.utils;
 
-import com.agh0st.nastoolserver.component.HttpCode;
-import com.agh0st.nastoolserver.object.PO.User;
-import com.agh0st.nastoolserver.object.VO.HttpDataVo;
+import com.agh0st.nastoolserver.object.response.HttpCode;
+import com.agh0st.nastoolserver.exception.UserNotFoundException;
+import com.agh0st.nastoolserver.object.entity.User;
+import com.agh0st.nastoolserver.object.response.HttpDataResponse;
 import com.agh0st.nastoolserver.service.UserService;
 import com.agh0st.nastoolserver.utils.AliPush;
 import com.alibaba.druid.util.StringUtils;
@@ -37,13 +38,15 @@ public class TestController {
         || StringUtils.isEmpty(body)
         || StringUtils.isEmpty(env)
         || StringUtils.isEmpty(payload)) {
-      return new HttpDataVo(HttpCode.DATA_ERROR);
+      return new HttpDataResponse(HttpCode.DATA_ERROR);
     }
-    User userInfo = userService.getUserInfo(username);
-    if (userInfo == null) {
-      return new HttpDataVo(HttpCode.NO_SUCH_USER);
+    User userInfo = null;
+    try {
+      userInfo = userService.getUserInfo(username);
+    } catch (UserNotFoundException e) {
+      return new HttpDataResponse(HttpCode.NO_SUCH_USER);
     }
-    return new HttpDataVo(
+    return new HttpDataResponse(
         HttpCode.SUCCESS,
         aliPush.pushMessageToIos(userInfo.getUuid(), title, body, env, payload) ? "T" : "F");
   }
@@ -63,13 +66,15 @@ public class TestController {
         || StringUtils.isEmpty(body)
         || StringUtils.isEmpty(env)
         || StringUtils.isEmpty(payload)) {
-      return new HttpDataVo(HttpCode.DATA_ERROR);
+      return new HttpDataResponse(HttpCode.DATA_ERROR);
     }
-    User userInfo = userService.getUserInfo(username);
-    if (userInfo == null) {
-      return new HttpDataVo(HttpCode.NO_SUCH_USER);
+    User userInfo = null;
+    try {
+      userInfo = userService.getUserInfo(username);
+    } catch (UserNotFoundException e) {
+      return new HttpDataResponse(HttpCode.NO_SUCH_USER);
     }
-    return new HttpDataVo(
+    return new HttpDataResponse(
         HttpCode.SUCCESS,
         aliPush.pushNoticeToIos(userInfo.getUuid(), title, body, env, payload) ? "T" : "F");
   }
