@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>邮箱绑定</title>
+</head>
+<body>
+<div>
+    发送时间：<span th:text="${sendDate}"></span>
+</div>
+<div>
+    请点击链接 <a th:text="${url}" th:href="${url}"></a> 验证邮箱
+</div>
+<div>
+    注意：有效期1小时
+</div>
+</body>
+</html>

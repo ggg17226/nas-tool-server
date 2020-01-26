@@ -1,5 +1,6 @@
 package com.agh0st.nastoolserver.session;
 
+import com.agh0st.nastoolserver.exception.SqlRuntimeException;
 import com.agh0st.nastoolserver.exception.UserNotFoundException;
 import com.agh0st.nastoolserver.object.entity.User;
 import com.agh0st.nastoolserver.object.response.HttpCode;
@@ -55,7 +56,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         User user1 = null;
         try {
           user1 = userService.getUserInfo(user.getUsername());
-        } catch (UserNotFoundException e) {
+        } catch (UserNotFoundException | SqlRuntimeException e) {
           session.invalidate();
           sendNeedLogin(rsp);
           return false;

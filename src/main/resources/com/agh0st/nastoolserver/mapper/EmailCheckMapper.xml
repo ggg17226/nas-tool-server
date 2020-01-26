@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agh0st.nastoolserver.mapper.EmailCheckMapper">
+    <resultMap id="BaseResultMap" type="com.agh0st.nastoolserver.object.entity.EmailCheck">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="uid" jdbcType="BIGINT" property="uid"/>
+        <result column="target_email" jdbcType="VARCHAR" property="targetEmail"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="code" jdbcType="CHAR" property="code"/>
+        <result column="status_code" jdbcType="INTEGER" property="statusCode"/>
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime"/>
+        <result column="verify_time" jdbcType="TIMESTAMP" property="verifyTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `uid`, target_email, create_time, update_time, code, status_code, send_time,
+    verify_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from email_check
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from email_check
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.agh0st.nastoolserver.object.entity.EmailCheck" useGeneratedKeys="true">
+        insert into email_check (`uid`, target_email, create_time,
+                                 update_time, code, status_code,
+                                 send_time, verify_time)
+        values (#{uid,jdbcType=BIGINT}, #{targetEmail,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP}, #{code,jdbcType=CHAR}, #{statusCode,jdbcType=INTEGER},
+                #{sendTime,jdbcType=TIMESTAMP}, #{verifyTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.agh0st.nastoolserver.object.entity.EmailCheck" useGeneratedKeys="true">
+        insert into email_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                `uid`,
+            </if>
+            <if test="targetEmail != null">
+                target_email,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="statusCode != null">
+                status_code,
+            </if>
+            <if test="sendTime != null">
+                send_time,
+            </if>
+            <if test="verifyTime != null">
+                verify_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                #{uid,jdbcType=BIGINT},
+            </if>
+            <if test="targetEmail != null">
+                #{targetEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=CHAR},
+            </if>
+            <if test="statusCode != null">
+                #{statusCode,jdbcType=INTEGER},
+            </if>
+            <if test="sendTime != null">
+                #{sendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="verifyTime != null">
+                #{verifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.agh0st.nastoolserver.object.entity.EmailCheck">
+        update email_check
+        <set>
+            <if test="uid != null">
+                `uid` = #{uid,jdbcType=BIGINT},
+            </if>
+            <if test="targetEmail != null">
+                target_email = #{targetEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=CHAR},
+            </if>
+            <if test="statusCode != null">
+                status_code = #{statusCode,jdbcType=INTEGER},
+            </if>
+            <if test="sendTime != null">
+                send_time = #{sendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="verifyTime != null">
+                verify_time = #{verifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.agh0st.nastoolserver.object.entity.EmailCheck">
+        update email_check
+        set `uid`        = #{uid,jdbcType=BIGINT},
+            target_email = #{targetEmail,jdbcType=VARCHAR},
+            create_time  = #{createTime,jdbcType=TIMESTAMP},
+            update_time  = #{updateTime,jdbcType=TIMESTAMP},
+            code         = #{code,jdbcType=CHAR},
+            status_code  = #{statusCode,jdbcType=INTEGER},
+            send_time    = #{sendTime,jdbcType=TIMESTAMP},
+            verify_time  = #{verifyTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateSentData">
+        update `email_check` set `status_code` =1 , `send_time` = #{date} where id in
+        <foreach collection="idList" item="item" separator="," open="(" close=")">#{item}</foreach>
+    </update>
+
+    <update id="updateSendFailData">
+        update `email_check` set `status_code` =4 , `send_time` = #{date} where id in
+        <foreach collection="idList" item="item" separator="," open="(" close=")">#{item}</foreach>
+    </update>
+
+    <update id="updateTimeout">
+        update `email_check`
+        set `status_code` =3
+        where `send_time` > #{date}
+    </update>
+</mapper>

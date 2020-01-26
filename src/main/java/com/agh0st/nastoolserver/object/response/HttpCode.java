@@ -23,6 +23,8 @@ public class HttpCode {
       new CodeObject(1002, "username format doesn't match", "用户名格式错误");
   public static CodeObject PASSWORD_FORMAT_ERROR =
       new CodeObject(1003, "password format doesn't match", "密码格式错误");
+  public static CodeObject EMAIL_FORMAT_ERROR =
+      new CodeObject(1004, "email format doesn't match", "邮箱格式错误");
   public static CodeObject NO_SUCH_USER = new CodeObject(1004, "no such User", "无此用户");
   public static CodeObject USERNAME_OR_PASSWORD_ERROR =
       new CodeObject(1005, "username or password error", "用户名或密码错误");
@@ -34,10 +36,16 @@ public class HttpCode {
   public static CodeObject ALREADY_ACTIVATION = new CodeObject(1011, "already activation", "已经激活");
   public static CodeObject PERMISSION_DENIED = new CodeObject(40300, "permission denied", "无权访问");
   public static CodeObject METHOD_DENIED = new CodeObject(40301, "method denied", "无权使用此method");
+  public static CodeObject OPERATION_TOO_FREQUENT =
+      new CodeObject(40302, "operation too frequent", "操作过于频繁");
+  public static CodeObject OPERATION_LIMIT = new CodeObject(40303, "operation limit", "操作次数到达系统上限");
+  public static CodeObject SUSPENDED_REGISTRATION =
+      new CodeObject(40304, "suspended registration", "暂停注册");
   public static CodeObject METHOD_NOT_FOUND = new CodeObject(40400, "method not found", "404了啊亲");
   public static CodeObject DATA_DOES_NOT_EXIST =
       new CodeObject(40401, "Data does not exist", "数据不存在");
   public static CodeObject SYSTEM_ERROR = new CodeObject(50000, "system error", "系统错误");
   public static CodeObject DATABASE_ERROR = new CodeObject(50001, "database error", "数据库错误");
   public static CodeObject FILE_USING = new CodeObject(50002, "file using error", "文件使用中");
+  public static CodeObject UNKNOWN_ERROR = new CodeObject(99999, "unknown error", "未知错误");
 }

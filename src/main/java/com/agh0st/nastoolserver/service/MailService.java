@@ -1,5 +1,6 @@
 package com.agh0st.nastoolserver.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -9,11 +10,13 @@ import org.thymeleaf.context.Context;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.NotNull;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
+@Log4j2
 public class MailService {
 
   @Resource private JavaMailSender mailSender;
@@ -22,8 +25,22 @@ public class MailService {
   @org.springframework.beans.factory.annotation.Value("${app.mail.username}")
   private String emailSender;
 
+  /**
+   * 发送提醒邮件
+   *
+   * @param target
+   * @param subject
+   * @param event
+   * @param eventDate
+   * @param details
+   * @throws MessagingException
+   */
   public void sendNotifyEmail(
-      String target, String subject, String event, Date eventDate, String details)
+      @NotNull String target,
+      @NotNull String subject,
+      @NotNull String event,
+      @NotNull Date eventDate,
+      @NotNull String details)
       throws MessagingException {
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -34,6 +51,28 @@ public class MailService {
     context.setVariable("notifyDetails", details);
     String content = templateEngine.process("mail/notify", context);
 
+    sendEmail(target, subject, content);
+  }
+
+  /**
+   * 发送绑定邮件
+   *
+   * @param target
+   * @param sendDate
+   * @param url
+   * @throws MessagingException
+   */
+  public void sendBindEmail(@NotNull String target, @NotNull String sendDate, @NotNull String url)
+      throws MessagingException {
+    Context context = new Context();
+    context.setVariable("sendDate", sendDate);
+    context.setVariable("url", url);
+    String content = templateEngine.process("mail/bind", context);
+
+    sendEmail(target, "绑定邮箱", content);
+  }
+
+  private void sendEmail(String target, String subject, String content) throws MessagingException {
     MimeMessage mimeMessage = mailSender.createMimeMessage();
     MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
     mimeMessage.setFrom(emailSender);

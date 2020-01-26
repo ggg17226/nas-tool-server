@@ -1,20 +1,21 @@
 package com.agh0st.nastoolserver.controller.V1.user;
 
-import com.agh0st.nastoolserver.exception.PasswordIncorrectException;
-import com.agh0st.nastoolserver.exception.SqlRuntimeException;
-import com.agh0st.nastoolserver.exception.UserAlreadyExistException;
-import com.agh0st.nastoolserver.exception.UserNotFoundException;
+import com.agh0st.nastoolserver.exception.*;
 import com.agh0st.nastoolserver.object.entity.User;
+import com.agh0st.nastoolserver.object.request.BindEmailRequest;
+import com.agh0st.nastoolserver.object.request.ChangePassowrdRequest;
 import com.agh0st.nastoolserver.object.request.LoginRequest;
 import com.agh0st.nastoolserver.object.response.HttpCode;
 import com.agh0st.nastoolserver.object.response.HttpDataResponse;
 import com.agh0st.nastoolserver.service.UserService;
-import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,9 @@ import java.io.IOException;
 public class UserController {
   @Resource private UserService userService;
   @Resource private Producer captchaProducer;
+
+  @Value("${app.regFlag}")
+  private boolean regFlag;
 
   private static final String USER_CAPTCHA_CODE_KEY = "user-captcha-code";
   private static final String USER_CAPTCHA_GEN_TIME_KEY = "user-captcha-gen-time";
@@ -189,12 +193,93 @@ public class UserController {
       return new HttpDataResponse(HttpCode.USERNAME_OR_PASSWORD_ERROR);
     } catch (PasswordIncorrectException e) {
       return new HttpDataResponse(HttpCode.USERNAME_OR_PASSWORD_ERROR);
+    } catch (SqlRuntimeException e) {
+      return new HttpDataResponse(HttpCode.SYSTEM_ERROR);
     }
 
     session.setAttribute("uid", userInfo.getId());
     session.setAttribute("userInfo", JSON.toJSONString(userInfo));
 
     return new HttpDataResponse(HttpCode.SUCCESS);
+  }
+
+  /**
+   * 修改密码
+   *
+   * @param session
+   * @param req
+   * @return
+   */
+  @PostMapping(
+      value = {"/changePassword"},
+      produces = "application/json; charset=utf-8")
+  @ResponseBody
+  public Object changePassword(
+      HttpSession session, @NotNull @RequestBody ChangePassowrdRequest req) {
+    if (StringUtils.isEmpty(req.getCaptcha())
+        || StringUtils.isEmpty(req.getOldPassword())
+        || StringUtils.isEmpty(req.getNewPassword())
+        || req.getOldPassword().trim().length() < 8
+        || req.getNewPassword().trim().length() < 8) {
+      return new HttpDataResponse(HttpCode.PASSWORD_FORMAT_ERROR);
+    }
+    if (!checkCaptchaCode(session, req.getCaptcha().trim())) {
+      return new HttpDataResponse(HttpCode.CAPTCHA_ERROR);
+    }
+    String oldPassword = req.getOldPassword().trim();
+    String newPassword = req.getNewPassword().trim();
+    User userInfo = JSON.parseObject((String) session.getAttribute("userInfo"), User.class);
+    try {
+      boolean b = userService.changePassword(userInfo.getUsername(), oldPassword, newPassword);
+      return b
+          ? (new HttpDataResponse(HttpCode.SUCCESS))
+          : (new HttpDataResponse(HttpCode.UNKNOWN_ERROR));
+    } catch (SqlRuntimeException e) {
+      return new HttpDataResponse(HttpCode.SYSTEM_ERROR);
+    } catch (UserNotFoundException e) {
+      return new HttpDataResponse(HttpCode.NO_SUCH_USER);
+    } catch (PasswordIncorrectException e) {
+      return new HttpDataResponse(HttpCode.USERNAME_OR_PASSWORD_ERROR);
+    }
+  }
+
+  /**
+   * 绑定邮箱
+   *
+   * @param session
+   * @param req
+   * @return
+   */
+  @PostMapping(
+      value = {"/bindEmail"},
+      produces = "application/json; charset=utf-8")
+  @ResponseBody
+  public Object bindEmail(HttpSession session, @NotNull @RequestBody BindEmailRequest req) {
+    if (StringUtils.isEmpty(req.getCaptcha())
+        || StringUtils.isEmpty(req.getEmail())
+        || !EmailValidator.getInstance().isValid(req.getEmail())) {
+      return new HttpDataResponse(HttpCode.DATA_ERROR);
+    }
+    if (!checkCaptchaCode(session, req.getCaptcha().trim())) {
+      return new HttpDataResponse(HttpCode.CAPTCHA_ERROR);
+    }
+    User userInfo = JSON.parseObject((String) session.getAttribute("userInfo"), User.class);
+    try {
+      boolean b = userService.bindEmail(userInfo.getUsername(), req.getEmail());
+      return b
+          ? (new HttpDataResponse(HttpCode.SUCCESS))
+          : (new HttpDataResponse(HttpCode.UNKNOWN_ERROR));
+    } catch (SqlRuntimeException e) {
+      return new HttpDataResponse(HttpCode.SYSTEM_ERROR);
+    } catch (UserNotFoundException e) {
+      return new HttpDataResponse(HttpCode.NO_SUCH_USER);
+    } catch (EmailCheckedException e) {
+      return new HttpDataResponse(HttpCode.EMAIL_FORMAT_ERROR);
+    } catch (TooQuickOperationException e) {
+      return new HttpDataResponse(HttpCode.OPERATION_TOO_FREQUENT);
+    } catch (TooManyOperationException e) {
+      return new HttpDataResponse(HttpCode.OPERATION_LIMIT);
+    }
   }
 
   /**
@@ -209,6 +294,9 @@ public class UserController {
       produces = "application/json; charset=utf-8")
   @ResponseBody
   public Object reg(HttpSession session, @Nullable @RequestBody LoginRequest loginRequest) {
+    if (!regFlag) {
+      return new HttpDataResponse(HttpCode.SUSPENDED_REGISTRATION);
+    }
     if (checkUserUploadData(loginRequest)) {
       return new HttpDataResponse(HttpCode.DATA_DOES_NOT_EXIST);
     }
