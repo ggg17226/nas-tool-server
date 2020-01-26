@@ -10,24 +10,21 @@ import com.agh0st.nastoolserver.utils.AliPush;
 import com.alibaba.druid.util.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-//@RestController
-//@RequestMapping("/V1/test")
+// @RestController
+// @RequestMapping("/V1/test")
 @Log4j2
 public class TestController {
   @Resource private UserService userService;
   @Resource private AliPush aliPush;
 
-//  @RequestMapping(
-//      value = {"/sendMsg"},
-//      produces = "application/json; charset=utf-8")
-//  @ResponseBody
+  //  @RequestMapping(
+  //      value = {"/sendMsg"},
+  //      produces = "application/json; charset=utf-8")
+  //  @ResponseBody
   public Object sendMsg(
       @RequestParam @Nullable String username,
       @RequestParam @Nullable String title,
@@ -54,10 +51,10 @@ public class TestController {
         aliPush.pushMessageToIos(userInfo.getUuid(), title, body, env, payload) ? "T" : "F");
   }
 
-//  @RequestMapping(
-//      value = {"/sendNotice"},
-//      produces = "application/json; charset=utf-8")
-//  @ResponseBody
+  //  @RequestMapping(
+  //      value = {"/sendNotice"},
+  //      produces = "application/json; charset=utf-8")
+  //  @ResponseBody
   public Object sendNotice(
       @RequestParam @Nullable String username,
       @RequestParam @Nullable String title,

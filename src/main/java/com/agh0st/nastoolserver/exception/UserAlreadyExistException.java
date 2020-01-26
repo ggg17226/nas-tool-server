@@ -1,4 +1,3 @@
 package com.agh0st.nastoolserver.exception;
 
-public class UserAlreadyExistException extends Exception {
-}
+public class UserAlreadyExistException extends Exception {}

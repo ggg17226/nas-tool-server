@@ -32,6 +32,4 @@ public class EmailCheck implements Serializable {
   private Date verifyTime;
 
   private static final long serialVersionUID = 1L;
-
-
 }

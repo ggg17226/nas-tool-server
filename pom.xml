@@ -252,4 +252,30 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>myNexusRepository</id>
+            <name>my nexus repository</name>
+            <url>http://myhome.aghost.cn:48081/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>myNexusRepository</id>
+            <name>my nexus repository</name>
+            <url>http://myhome.aghost.cn:48081/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
