@@ -256,7 +256,7 @@
         <repository>
             <id>myNexusRepository</id>
             <name>my nexus repository</name>
-            <url>http://maven.agh0st.com/nexus/content/groups/public/</url>
+            <url>http://maven.agh0st.com/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -269,7 +269,7 @@
         <pluginRepository>
             <id>myNexusRepository</id>
             <name>my nexus repository</name>
-            <url>http://maven.agh0st.com/nexus/content/groups/public/</url>
+            <url>http://maven.agh0st.com/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
