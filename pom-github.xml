@@ -25,7 +25,7 @@
         <mybatis.version>2.1.1</mybatis.version>
         <pagehelper.version>1.2.13</pagehelper.version>
         <!--        <jedis.version>2.10.2</jedis.version>-->
-        <kaptcha.version>2.3.2</kaptcha.version>
+        <kaptcha.version>2.3.3</kaptcha.version>
         <alisdk.core.version>4.4.4</alisdk.core.version>
         <alisdk.push.version>3.10.1</alisdk.push.version>
         <commons-validator.version>1.6</commons-validator.version>
@@ -214,7 +214,7 @@
             <version>${jedis.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.penggle</groupId>
+            <groupId>com.agh0st</groupId>
             <artifactId>kaptcha</artifactId>
             <version>${kaptcha.version}</version>
         </dependency>
@@ -256,6 +256,9 @@
             </plugin>
         </plugins>
     </build>
+
+
+
     <repositories>
         <repository>
             <id>myNexusRepository</id>
