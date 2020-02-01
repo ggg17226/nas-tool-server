@@ -5,6 +5,7 @@ import com.agh0st.nastoolserver.object.entity.EmailCheck;
 import com.agh0st.nastoolserver.service.MailService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,9 @@ public class SendBindEmailTask {
   @Resource private EmailCheckMapper emailCheckMapper;
   @Resource private MailService mailService;
 
+  @Value("${app.baseUrl}")
+  private String baseUrl;
+
   private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   @Scheduled(fixedDelay = 60000, initialDelay = 1000)
@@ -35,7 +39,7 @@ public class SendBindEmailTask {
             mailService.sendBindEmail(
                 emailCheck.getTargetEmail(),
                 df.format(sendDate),
-                "http://localhost:52333/V1/user/checkBind/" + emailCheck.getCode());
+                baseUrl + "/V1/user/checkBind/" + emailCheck.getCode());
             successIdList.add(emailCheck.getId());
           } catch (MessagingException e) {
             log.error("send_bind_email: {}", ExceptionUtils.getStackTrace(e));
