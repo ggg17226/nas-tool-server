@@ -9,14 +9,14 @@ import com.aliyuncs.push.model.v20160801.PushRequest;
 import com.aliyuncs.push.model.v20160801.PushResponse;
 import com.aliyuncs.push.model.v20160801.QueryDevicesByAccountRequest;
 import com.aliyuncs.push.model.v20160801.QueryDevicesByAccountResponse;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@Log4j2
+@Slf4j
 public class AliPush {
   private DefaultProfile profile = null;
   private IAcsClient client = null;

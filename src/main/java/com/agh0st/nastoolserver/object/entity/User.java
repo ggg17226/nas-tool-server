@@ -12,24 +12,15 @@ import java.util.Date;
  */
 @Data
 public class User implements Serializable {
+  private static final long serialVersionUID = 1L;
   private Long id;
-
   private String username;
-
   private String passwd;
-
   private String salt;
-
   private Date createTime;
-
   private Date updateTime;
-
   private String uuid;
-
   private String email;
-
   /** 0-未验证 1-已验证 */
   private Integer emailChecked;
-
-  private static final long serialVersionUID = 1L;
 }

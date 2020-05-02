@@ -11,7 +11,7 @@ import com.agh0st.nastoolserver.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -30,16 +30,14 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/V1/user")
-@Log4j2
+@Slf4j
 public class UserController {
-  @Resource private UserService userService;
-  @Resource private Producer captchaProducer;
-
-  @Value("${app.regFlag}")
-  private boolean regFlag;
-
   private static final String USER_CAPTCHA_CODE_KEY = "user-captcha-code";
   private static final String USER_CAPTCHA_GEN_TIME_KEY = "user-captcha-gen-time";
+  @Resource private UserService userService;
+  @Resource private Producer captchaProducer;
+  @Value("${app.regFlag}")
+  private boolean regFlag;
 
   /**
    * 检查提交数据

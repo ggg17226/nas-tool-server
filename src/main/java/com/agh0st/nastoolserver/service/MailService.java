@@ -1,6 +1,6 @@
 package com.agh0st.nastoolserver.service;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
-@Log4j2
+@Slf4j
 public class MailService {
 
   @Resource private JavaMailSender mailSender;

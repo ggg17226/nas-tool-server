@@ -3,7 +3,7 @@ package com.agh0st.nastoolserver.task;
 import com.agh0st.nastoolserver.mapper.EmailCheckMapper;
 import com.agh0st.nastoolserver.object.entity.EmailCheck;
 import com.agh0st.nastoolserver.service.MailService;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,15 +17,13 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@Log4j2
+@Slf4j
 public class SendBindEmailTask {
+  private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   @Resource private EmailCheckMapper emailCheckMapper;
   @Resource private MailService mailService;
-
   @Value("${app.baseUrl}")
   private String baseUrl;
-
-  private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   @Scheduled(fixedDelay = 60000, initialDelay = 1000)
   public void sendBindEmail() {

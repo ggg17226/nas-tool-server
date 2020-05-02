@@ -3,19 +3,6 @@ package com.agh0st.nastoolserver.object.response;
 import lombok.Data;
 
 public class HttpCode {
-  @Data
-  public static class CodeObject {
-    private int code;
-    private String desc;
-    private String desc_cn;
-
-    public CodeObject(int code, String desc, String desc_cn) {
-      this.code = code;
-      this.desc = desc;
-      this.desc_cn = desc_cn;
-    }
-  }
-
   public static CodeObject SUCCESS = new CodeObject(0, "success", "执行成功");
   public static CodeObject DATA_ERROR = new CodeObject(1000, "data error", "数据错误");
   public static CodeObject USER_EXISTS = new CodeObject(1001, "User already exists", "用户已存在");
@@ -48,4 +35,17 @@ public class HttpCode {
   public static CodeObject DATABASE_ERROR = new CodeObject(50001, "database error", "数据库错误");
   public static CodeObject FILE_USING = new CodeObject(50002, "file using error", "文件使用中");
   public static CodeObject UNKNOWN_ERROR = new CodeObject(99999, "unknown error", "未知错误");
+
+  @Data
+  public static class CodeObject {
+    private int code;
+    private String desc;
+    private String desc_cn;
+
+    public CodeObject(int code, String desc, String desc_cn) {
+      this.code = code;
+      this.desc = desc;
+      this.desc_cn = desc_cn;
+    }
+  }
 }

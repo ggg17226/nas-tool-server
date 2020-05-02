@@ -5,7 +5,7 @@ import com.agh0st.nastoolserver.mapper.EmailCheckMapper;
 import com.agh0st.nastoolserver.mapper.UserMapper;
 import com.agh0st.nastoolserver.object.entity.EmailCheck;
 import com.agh0st.nastoolserver.object.entity.User;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -22,14 +22,13 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@Log4j2
+@Slf4j
 public class UserService {
 
+  private static final int userMaxBindEmailPerDay = 20;
   @Resource private UserMapper userMapper;
   @Resource private EmailCheckMapper emailCheckMapper;
   @Resource private StringRedisTemplate stringRedisTemplate;
-
-  private static final int userMaxBindEmailPerDay = 20;
 
   private String generatePasswordHashString(@NotNull String password, @NotNull String salt) {
     if (StringUtils.isEmpty(password) || StringUtils.isEmpty(salt)) {

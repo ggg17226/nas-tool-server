@@ -8,7 +8,7 @@ import com.agh0st.nastoolserver.object.response.HttpDataResponse;
 import com.agh0st.nastoolserver.service.UserService;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Configuration
-@Log4j2
+@Slf4j
 public class SessionInterceptor implements HandlerInterceptor {
   @Resource private UserService userService;
 

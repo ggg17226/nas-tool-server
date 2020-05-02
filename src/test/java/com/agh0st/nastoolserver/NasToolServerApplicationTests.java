@@ -2,7 +2,8 @@ package com.agh0st.nastoolserver;
 
 import com.agh0st.nastoolserver.service.MailService;
 import com.agh0st.nastoolserver.utils.AliPush;
-import lombok.extern.log4j.Log4j2;
+import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,20 +27,19 @@ import java.util.stream.IntStream;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ImportResource(locations = {"classpath:kaptcha.xml"})
-@Log4j2
+@Slf4j
 public class NasToolServerApplicationTests {
+  @Resource MailService mailService;
+  @Resource AliPush aliPush;
   @Resource private JavaMailSender mailSender;
   @Resource private TemplateEngine templateEngine;
 
   @org.springframework.beans.factory.annotation.Value("${app.mail.username}")
   private String emailSender;
 
-  @Resource MailService mailService;
-  @Resource AliPush aliPush;
-
   @Test
   public void getDeviceList() {
-    log.info(aliPush.getDevices("test"));
+    log.info(JSON.toJSONString(aliPush.getDevices("test")));
   }
 
   @Test

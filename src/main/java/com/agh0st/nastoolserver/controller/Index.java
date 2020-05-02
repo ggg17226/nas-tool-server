@@ -3,7 +3,7 @@ package com.agh0st.nastoolserver.controller;
 import com.agh0st.nastoolserver.object.response.HttpCode;
 import com.agh0st.nastoolserver.object.response.HttpDataResponse;
 import com.agh0st.nastoolserver.object.response.ServerTimeResponse;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/")
-@Log4j2
+@Slf4j
 public class Index {
   @RequestMapping(
       value = {"/", "/index"},

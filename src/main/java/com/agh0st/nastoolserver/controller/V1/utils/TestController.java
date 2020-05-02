@@ -8,7 +8,7 @@ import com.agh0st.nastoolserver.object.response.HttpDataResponse;
 import com.agh0st.nastoolserver.service.UserService;
 import com.agh0st.nastoolserver.utils.AliPush;
 import com.alibaba.druid.util.StringUtils;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 
 // @RestController
 // @RequestMapping("/V1/test")
-@Log4j2
+@Slf4j
 public class TestController {
   @Resource private UserService userService;
   @Resource private AliPush aliPush;
