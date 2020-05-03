@@ -170,7 +170,7 @@
             <version>${jedis.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.agh0st</groupId>
+            <groupId>cn.aghost</groupId>
             <artifactId>kaptcha</artifactId>
             <version>${kaptcha.version}</version>
         </dependency>
