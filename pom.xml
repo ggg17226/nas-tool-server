@@ -8,11 +8,11 @@
         <version>2.2.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.agh0st</groupId>
+    <groupId>cn.aghost</groupId>
     <artifactId>nas-tool-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>nas-tool-server</name>
-    <description>Demo project for Spring Boot</description>
+    <description>nas tool server</description>
 
     <properties>
         <java.version>11</java.version>
@@ -29,10 +29,15 @@
         <alisdk.push.version>3.13.1</alisdk.push.version>
         <commons-validator.version>1.6</commons-validator.version>
         <annotations.version>3.0.1</annotations.version>
-        <xmpush.version>1.0.5.01</xmpush.version>
+        <xmpush.version>1.0.5.03</xmpush.version>
+        <okhttp3.version>4.6.0</okhttp3.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
